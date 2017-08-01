@@ -2,7 +2,7 @@ const proxy = require('http-proxy')
 const fs = require('fs')
 const url = require('url')
 
-function getRemoteTarget (bind) {
+function getRemoteTarget(bind) {
   if (bind.port) {
     return `http://localhost:${bind.port}`
   }

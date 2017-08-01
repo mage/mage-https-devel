@@ -6,7 +6,7 @@ const path = require('path')
 
 const async = require('async')
 const mkdirp = require('mkdirp')
-const create = require('create-cert')
+const pem = require('pem')
 
 const CERTS_FOLDER = path.join(process.cwd(), 'certs')
 const INSTALL_CMDS = {
@@ -16,28 +16,34 @@ const INSTALL_CMDS = {
   },
   win32: {
     exec: 'certutil',
-    args: 'add-trusted-cert -addstore -user Root certs\\localhost.cer'.split(' ')
+    args: '-addstore -user Root certs\\localhost.cer'.split(' ')
   },
   linux: {
     // not supported
   }
 }
 
+function exec(...args) {
+  return cp.execFile(...args)
+}
+
 function install(cert, callback) {
-  const certPath = path.join(CERTS_FOLDER, cert)
   const {
     platform
-   } = process
+  } = process
   const installCmd = INSTALL_CMDS[platform]
 
   if (!installCmd) {
     return callback(new Error('Platform not supported: ' + platform))
   }
 
-  const cmd = cp.spawn(installCmd.exec, installCmd.args, { shell: true })
-  cmd.stdout.pipe(process.stdout)
-  cmd.stderr.pipe(process.stderr)
-  cmd.on('close', (code) => callback(code === 0 ? null : new Error('install failed')))
+  exec(installCmd.exec, installCmd.args, function (error, stdout, stderr) {
+    console.log(stdout)
+    console.error(stderr)
+    assert(error)
+
+    callback()
+  })
 }
 
 function assert(error) {
@@ -53,20 +59,33 @@ function write(filename, data) {
   }
 }
 
-create({
-  days: 365 * 100,
-  commonName: 'localhost'
-}).then(({ key, cert, caCert }) => {
+pem.createCertificate({
+  keyBitsize: 4096,
+  country: 'JP',
+  state: 'Tokyo',
+  locality: 'Chuo-ku',
+  organization: 'MAGE',
+  organizationUnit: 'HTTPS',
+  commonName: 'localhost',
+  altNames: [
+    'localhost'
+  ],
+  days: 1,
+  selfSigned: true
+}, (error, res) => {
+  assert(error)
+  const { serviceKey: key, certificate: cert } = res
+
   mkdirp(CERTS_FOLDER, function (error) {
     assert(error)
 
     async.parallel([
       write('localhost.key', key),
-      write('localhost.cer', cert),
-      write('ca.cert', caCert)
+      write('localhost.cer', cert)
     ], function (error) {
       assert(error)
       install('localhost.cer', (error) => assert(error))
     })
   })
 })
+

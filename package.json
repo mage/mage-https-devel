@@ -1,6 +1,6 @@
 {
   "name": "mage-https-devel",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Toolchain for enabling the use of HTTPS during local development",
   "main": "index.js",
   "bin": {
@@ -26,9 +26,10 @@
   "homepage": "https://github.com/mage/mage-https-devel#readme",
   "dependencies": {
     "async": "2.4.1",
-    "create-cert": "^1.0.4",
     "http-proxy": "1.16.2",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "pem": "1.9.7",
+    "windows-elevate": "1.0.1"
   },
   "devDependencies": {
     "eslint": "4.0.0",
