@@ -33,8 +33,8 @@ exports.setup = function (mage) {
 
     try {
       ssl = {
-        key: fs.readFileSync('certs/localhost.key'),
-        cert: fs.readFileSync('certs/localhost.cer')
+        key: fs.readFileSync(path.join(__dirname, './certs/localhost.key')),
+        cert: fs.readFileSync(path.join(__dirname, './certs/localhost.cer'))
       }
     } catch (error) {
       logger.emergency('Failed to load certificate files', error)
