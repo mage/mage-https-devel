@@ -1,13 +1,13 @@
 {
   "name": "mage-https-devel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Toolchain for enabling the use of HTTPS during local development",
   "main": "index.js",
   "bin": {
     "mage-ssl-create": "./bin/mage-ssl-create.js"
   },
   "scripts": {
-    "test": "eslint --ext .js,.json . && git-signed"
+    "test": "eslint --ext .js,.json ."
   },
   "repository": {
     "type": "git",
@@ -28,13 +28,12 @@
     "async": "2.4.1",
     "http-proxy": "1.16.2",
     "mkdirp": "0.5.1",
-    "pem": "1.9.7",
+    "pem": "1.12.3",
     "windows-elevate": "1.0.1"
   },
   "devDependencies": {
     "eslint": "4.0.0",
     "eslint-plugin-json": "1.2.0",
-    "git-message": "1.0.3",
-    "git-signed": "0.0.2"
+    "git-message": "1.0.3"
   }
 }

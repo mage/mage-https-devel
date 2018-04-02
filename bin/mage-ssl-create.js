@@ -37,6 +37,11 @@ function install(cert, callback) {
     return callback(new Error('Platform not supported: ' + platform))
   }
 
+  if (!installCmd.exec && !installCmd.args) {
+    console.warn('Certificate created but cannot install locally for this platform, skipping')
+    return callback()
+  }
+
   exec(installCmd.exec, installCmd.args, function (error, stdout, stderr) {
     console.log(stdout)
     console.error(stderr)

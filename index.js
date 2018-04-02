@@ -1,6 +1,7 @@
 const proxy = require('http-proxy')
 const fs = require('fs')
 const url = require('url')
+const path = require('path')
 
 function getRemoteTarget(bind) {
   if (bind.port) {
