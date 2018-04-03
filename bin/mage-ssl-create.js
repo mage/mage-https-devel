@@ -3,12 +3,15 @@
 const fs = require('fs')
 const cp = require('child_process')
 const path = require('path')
+const crypto = require('crypto')
 
 const async = require('async')
 const mkdirp = require('mkdirp')
 const pem = require('pem')
 
 const CERTS_FOLDER = path.join(process.cwd(), 'certs')
+const ID = 'mage-https-devel-' + crypto.createHash('md5').update(CERTS_FOLDER).digest('hex')
+
 const INSTALL_CMDS = {
   darwin: {
     exec: 'security',
@@ -19,7 +22,8 @@ const INSTALL_CMDS = {
     args: '-addstore -user Root certs\\localhost.cer'.split(' ')
   },
   linux: {
-    // not supported
+    exec: 'certutil',
+    args: `-d sql:${process.env.HOME}/.pki/nssdb -A -t P,, -n ${ID} -i certs/localhost.cer`.split(' ')
   }
 }
 
